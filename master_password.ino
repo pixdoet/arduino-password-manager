@@ -2,36 +2,31 @@
 
 #include "keypad_local.h"
 
-const char master_password[7] = "111111";
+const char master_password[7] = "111111"; // CHANGE HERE
 
 bool verifyMasterPassword()
 {
   char pw_input[7];
   buildCharBuff(pw_input);
 
-  Serial.print("PW Input: ");
+  Serial.print("Master password input: ");
   Serial.println(pw_input);
+
   if (strcmp(pw_input, master_password) == 0)
   {
-    return true;
+    return true; // password correct
   }
   else
   {
-    return false;
+    return false; // password wrong
   }
-}
-
-void updateMasterPassword(char new_master_password[])
-{
-
 }
 
 void buildCharBuff(char password_buffer[])
 {
-  // char password_buffer[6];
   int i = 0;
 
-  Serial.println("Input password: ");
+  Serial.println("Please input password: ");
 
   while (i < 6)
   {
@@ -50,6 +45,6 @@ void buildCharBuff(char password_buffer[])
       }
     }
   }
-  // add \0
+  // add null terminator for password input
   password_buffer[6] = '\0';
 }

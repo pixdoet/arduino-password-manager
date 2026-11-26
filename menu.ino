@@ -29,7 +29,9 @@ bool unlock_menu()
   display.setCursor(0,0);
   display.println(F("The Password Manager"));
   display.setCursor(0,10);
-  display.println(F("Master password: "));
+  display.println(F("Enter Master pwd: "));
+  display.setCursor(0,20);
+  display.println(F("Input is hidden"));
   display.display();
 
   bool unlock_device = verifyMasterPassword();
@@ -39,6 +41,10 @@ bool unlock_menu()
     display.clearDisplay();
     display.setCursor(0,0);
     display.println(F("Wrong password!"));
+    display.setCursor(0,10);
+    display.println(F("Enter Master pwd: "));
+    display.setCursor(0,20);
+    display.println(F("Input is hidden"));
     display.display();
   }
 
@@ -51,9 +57,9 @@ void display_main_menu()
   display.setCursor(0,0);
   display.println("A: Read passwords");
   display.setCursor(0,10);
-  display.println("B: Save new pw");
+  display.println("B: Save new password");
   display.setCursor(0,20);
-  display.println("C: Clear all pw");
+  display.println("C: Clear all pwds");
 
   display.display();
 
@@ -93,9 +99,11 @@ void display_passwords()
   {
     display.clearDisplay();
     display.setCursor(0,0);
-    display.println(F("PW Manager"));
+    display.println(F("View Passwords"));
     display.setCursor(0,10);
     display.println("Password 1,2,3?");
+    display.setCursor(0,20);
+    display.println(F("Press number key"));
 
     display.display();
 
@@ -122,10 +130,12 @@ void display_passwords()
             askingSelection = false;
             break;
           default:
-            Serial.println("Pls select number");
+            Serial.println("Pls select a number");
             display.clearDisplay();
             display.setCursor(0,0);
-            display.println(F("Press 1 2 or 3"));
+            display.println(F("View Passwords"));
+            display.setCursor(0,10);
+            display.println(F("Press 1, 2 or 3"));
             display.display();
             break;
         }
@@ -143,7 +153,7 @@ void display_passwords()
     display.println(entry.password);
 
     display.setCursor(0,20);
-    display.println(F("D to exit"));
+    display.println(F("Press D to exit"));
     display.display();
 
     bool waitingQuit = true;
@@ -179,6 +189,8 @@ void display_generate_passwords()
     display.println(F("Gen new password"));
     display.setCursor(0,10);
     display.println(F("Set pw for 1,2,3?"));
+    display.setCursor(0,20);
+    display.println(F("Press number key"));
     display.display();
 
     bool askingSelection = true;
@@ -227,7 +239,7 @@ void display_generate_passwords()
     display.println(entry.password);
 
     display.setCursor(0,24);
-    display.println(F("D to exit"));
+    display.println(F("Press D to exit"));
     display.display();
 
     bool waitingQuit = true;
@@ -238,15 +250,15 @@ void display_generate_passwords()
       keypress2 = get_key_press();
       if (keypress2)
       {
-        switch (keypress2)
+        if (keypress2 == 'D')
         {
-          case 'D':
-            displaying = false;
-            waitingQuit = false;
-            break;
-          default:
-            Serial.print("Waitingquit: ");
-            Serial.println(keypress2);
+          displaying = false;
+          waitingQuit = false;
+        }
+        else
+        {
+          Serial.print("Waitingquit: ");
+          Serial.println(keypress2);
         }
       }
     }
@@ -266,7 +278,7 @@ void display_clear_passwords()
   display.setCursor(0,0);
   display.println(F("All pw cleared!"));
   display.setCursor(0,20);
-  display.println(F("D to exit"));
+  display.println(F("Press D to exit"));
   display.display();
 
   bool waitingQuit = true;
@@ -275,9 +287,13 @@ void display_clear_passwords()
   while (waitingQuit)
   {
     keypress2 = get_key_press();
-    if (keypress2 == "D")
+    if (keypress2 == 'D')
     {
       waitingQuit = false;
+    }
+    else
+    {
+
     }
   }
 }

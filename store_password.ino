@@ -16,20 +16,13 @@ void generatePassword(char password_char[]) {
 }
 
 /*
-  Allocate 32b for each password address
-  16 * 4 * 5 = ~324byte
+  Allocate 64b for each password address
+  16 * 4 * 3 = ~192 bytes
 
   store passwords in 1 - 3:
   0 - 64
   65 - 129
   130 - 194
-
-
-  Alloc 32 for each title addr.
-  Start from 256
-  256 - 384
-  385 - 513
-  514 - 642
 */
 
 const int address1 = 0;
@@ -46,19 +39,18 @@ int password_address;
 
 void storePassword(int address, char title[], char password[]) {
   /*
-  Store passwords into Arduino EEPROM. 5 entries only to fit <1kb
-  - Format: "char title[64],char password[32]" (comma separated)
+  Store passwords into Arduino EEPROM. 3 entries only to fit <1kb
   */
 
   // check for valid address
   if (address < 1 || address > 3) {
     Serial.println("ERROR: Address is not between 1 and 3!");
     return;
-  } 
+  }
+
   else 
   {
-    // check if title length > 63 (safety)
-    // I think this is how buffer overflows happen
+    // check if title length > 63 (prevent buffer overflows)
     if (strlen(title) > 31) {
       Serial.println("ERROR: Title length must be under 31 characters!");
       Serial.println("Please restart the box");
@@ -82,9 +74,13 @@ void storePassword(int address, char title[], char password[]) {
           break;
       }
 
-      PasswordEntry entry;
-      strncpy(entry.title, title, sizeof(entry.title));
+      PasswordEntry entry; // create password entry struct
+
+      // copy password entries into the struct
+      strncpy(entry.title, title, sizeof(entry.title)); 
       strncpy(entry.password, password, sizeof(entry.password));
+
+      
       EEPROM.put(title_address, entry.title);
       EEPROM.put(password_address, entry.password);
     }
